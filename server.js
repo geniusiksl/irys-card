@@ -10,8 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 // --- НАСТРОЙКИ ИЗ DISCORD DEVELOPER PORTAL ---
 const CLIENT_ID = '1392017879855136788'; // Замените на свой Client ID
 const CLIENT_SECRET = 'jKpISmkC-leYDrDp_WL3Q7SoJxIjay0b'; // Замените на свой Client Secret
-const REDIRECT_URI = 'http://localhost:3000/callback'; // Должно совпадать с настройками в Discord App
-const FRONTEND_URL = 'http://localhost:5500'; // URL вашего фронтенда (например, Live Server)
+const REDIRECT_URI = 'https://geniusiksl.github.io/irys-card/callback'; // Должно совпадать с настройками в Discord App
+const FRONTEND_URL = 'https://geniusiksl.github.io/irys-card/'; // URL вашего фронтенда (например, Live Server)
 // -------------------------------------------
 
 // Роут для начала процесса аутентификации в Discord
