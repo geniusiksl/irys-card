@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>IRYS CARD</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="icon.png">
   <style>
     /* Основные стили */
@@ -13,7 +13,7 @@
       --role2-color: #5085cc;
     }
     body {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--bg-color);
       color: #fff;
       margin: 0;
@@ -180,7 +180,7 @@
       padding: 8px 12px;
       border-radius: 6px;
       border: none;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
     button {
       cursor: pointer;
@@ -504,26 +504,49 @@
     }
 
     // Функция для скачивания карточки
-// Функция для скачивания карточки
+
 function downloadProfile() {
-  // Скрываем панель управления кепкой
+  const profileFrame = document.getElementById('profileFrame');
   const hatControls = document.getElementById('hatControls');
-  const prevDisplay = hatControls.style.display;
-  hatControls.style.display = 'none';
+  // Сохраняем текущие стили
+  const originalBorderRadius = profileFrame.style.borderRadius;
+  const originalHatControlsDisplay = hatControls ? hatControls.style.display : '';
 
-  html2canvas(elements.profileFrame, { useCORS: true, allowTaint: true, scale: 2 }).then(canvas => {
-    // Возвращаем панель обратно
-    hatControls.style.display = prevDisplay;
+  // Временно убираем скругление углов
+  profileFrame.style.borderRadius = '0';
+  // Временно скрываем панель управления кепкой (если нужно)
+  if (hatControls) {
+    hatControls.style.display = 'none';
+  }
 
-    const link = document.createElement('a');
-    link.download = 'irys-card.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }).catch(e => {
-    // Возвращаем панель обратно даже при ошибке
-    hatControls.style.display = prevDisplay;
-    alert('Ошибка при генерации изображения: ' + e);
-  });
+  if (typeof html2canvas !== 'undefined') {
+    html2canvas(profileFrame, {
+      useCORS: true,
+      allowTaint: false,
+      scale: 2
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'jirys-card.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(error => {
+      console.error('Ошибка при генерации изображения:', error);
+      alert('Не удалось скачать карточку. Проверьте консоль (F12).');
+    }).finally(() => {
+      // Возвращаем старые стили обратно
+      profileFrame.style.borderRadius = originalBorderRadius;
+      if (hatControls) {
+        hatControls.style.display = originalHatControlsDisplay;
+      }
+    });
+  } else {
+    alert('Библиотека html2canvas не загрузилась. Подождите или проверьте интернет.');
+    // Возвращаем стили, если библиотека не загрузилась
+    profileFrame.style.borderRadius = originalBorderRadius;
+    if (hatControls) {
+      hatControls.style.display = originalHatControlsDisplay;
+    }
+  }
 }
 
     // Обработка редиректа с бэкенда (получение ник/аватарки из Discord)
