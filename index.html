@@ -140,6 +140,7 @@
     }
     .profile-role2 {
       font-size: 18px;
+      font-weight: 500;
       color: var(--role2-color);
     }
     
@@ -526,7 +527,7 @@ function downloadProfile() {
       scale: 2
     }).then(canvas => {
       const link = document.createElement('a');
-      link.download = 'jirys-card.png';
+      link.download = 'irys-card.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     }).catch(error => {
