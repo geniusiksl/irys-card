@@ -506,34 +506,24 @@
     // Функция для скачивания карточки
 // Функция для скачивания карточки
 function downloadProfile() {
+  // Скрываем панель управления кепкой
   const hatControls = document.getElementById('hatControls');
-  // Временно скрываем панель управления кепкой
-  if (hatControls) {
-    hatControls.style.display = 'none';
-  }
+  const prevDisplay = hatControls.style.display;
+  hatControls.style.display = 'none';
 
-  if (typeof html2canvas !== 'undefined') {
-    html2canvas(elements.profileFrame, {
-      useCORS: true, // Разрешает загрузку изображений с других доменов
-      allowTaint: false, // Блокирует "загрязненные" холсты
-      scale: 2 // Увеличивает качество
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'jirys-card.png';
-      link.href = canvas.toDataURL('image/png'); // Преобразует холст в ссылку
-      link.click(); // Инициирует скачивание
-    }).catch(error => {
-      console.error('Ошибка при генерации изображения:', error);
-      alert('Не удалось скачать карточку. Проверьте консоль (F12).');
-    }).finally(() => {
-      // Возвращаем видимость панели управления кепкой
-      if (hatControls) {
-        hatControls.style.display = state.hat.added ? 'flex' : 'none';
-      }
-    });
-  } else {
-    alert('Библиотека html2canvas не загрузилась. Подождите или проверьте интернет.');
-  }
+  html2canvas(elements.profileFrame, { useCORS: true, allowTaint: true, scale: 2 }).then(canvas => {
+    // Возвращаем панель обратно
+    hatControls.style.display = prevDisplay;
+
+    const link = document.createElement('a');
+    link.download = 'jirys-card.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(e => {
+    // Возвращаем панель обратно даже при ошибке
+    hatControls.style.display = prevDisplay;
+    alert('Ошибка при генерации изображения: ' + e);
+  });
 }
 
     // Обработка редиректа с бэкенда (получение ник/аватарки из Discord)
