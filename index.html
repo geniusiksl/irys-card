@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IRYS CARD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Основные стили */
+    :root {
+      --bg-color: #3a3a3a;
+      --role2-color: #5085cc;
+    }
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Шапка */
+    .main-header {
+      text-align: center;
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+    }
+    .logo {
+      height: 80px;
+      margin-bottom: 10px;
+    }
+    .connect-btn {
+      position: absolute;
+      right: 20px;
+      top: 40px;
+      padding: 10px 20px;
+      background: #fff;
+      color: #222;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    /* Основной макет */
+    .workspace {
+      display: flex;
+      max-width: 1200px;
+      margin: 30px auto;
+      gap: 40px;
+      padding: 0 20px;
+    }
+    
+    /* Карточка профиля */
+    .profile-frame {
+      width: 480px;
+      height: 480px;
+      background: url('bg4.jpg') center/cover;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Аватар */
+    .avatar-container {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      width: 160px;
+      height: 160px;
+      z-index: 2;
+    }
+    .avatar-drop {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: url('avatar.png') center/cover;
+      position: relative;
+    }
+    
+    /* Кепка */
+    .hat-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      transform-origin: center bottom;
+      cursor: move;
+      z-index: 3;
+    }
+    
+    /* Панель управления кепкой */
+    .hat-controls {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      z-index: 10;
+    }
+    .hat-control {
+      flex: 1 1 100px;
+      text-align: center;
+    }
+    .hat-control label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      color: #fff;
+    }
+    .hat-slider {
+      width: 90%;
+    }
+    
+    /* Информация профиля */
+    .profile-info {
+      position: absolute;
+      top: 30px;
+      left: 210px;
+      color: #000;
+      z-index: 5;
+    }
+    .profile-nickname {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .profile-role1 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+    .profile-role2 {
+      font-size: 18px;
+      color: var(--role2-color);
+    }
+    
+    /* Спрайты */
+    .sprite-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .sprite {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      transform: translate(-50%, -50%);
+    }
+    
+    /* Панель управления */
+    .control-stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .ctrl-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ctrl-block label {
+      width: 100px;
+      font-weight: bold;
+    }
+    select, button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      font-family: 'Syne', sans-serif;
+    }
+    button {
+      cursor: pointer;
+      margin-right: 5px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+    
+    /* Кнопка скачивания */
+    .download-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #fff;
+      color: #222;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <img src="logo.png" class="logo" alt="JIRYS CARD">
+    <!-- Кнопка теперь для Discord -->
+    <button id="connectBtn" class="connect-btn">Connect Discord</button>
+  </header>
+
+  <main class="workspace">
+    <section class="profile-frame" id="profileFrame">
+      <div class="avatar-container">
+        <div class="avatar-drop" id="avatar"></div>
+        <img id="hatImage" class="hat-image" style="display: none;">
+      </div>
+      
+      <div class="profile-info">
+        <div id="nickname" class="profile-nickname">Josh Benaron</div>
+        <div id="role1" class="profile-role1">Deshi (✧ᴗ✧)</div>
+        <div id="role2" class="profile-role2">Irysmind</div>
+      </div>
+      
+      <div class="sprite-container" id="spriteContainer"></div>
+
+      <!-- Панель управления кепкой -->
+      <div class="hat-controls" id="hatControls" style="display: none;">
+        <div class="hat-control">
+          <label>Position X</label>
+          <input type="range" min="-50" max="50" value="0" class="hat-slider" id="hatPosX">
+        </div>
+        <div class="hat-control">
+          <label>Position Y</label>
+          <input type="range" min="-50" max="50" value="0" class="hat-slider" id="hatPosY">
+        </div>
+        <div class="hat-control">
+          <label>Rotation</label>
+          <input type="range" min="0" max="360" value="0" class="hat-slider" id="hatRotate">
+        </div>
+        <div class="hat-control">
+          <label>Scale X</label>
+          <input type="range" min="50" max="150" value="100" class="hat-slider" id="hatScaleX">
+        </div>
+        <div class="hat-control">
+          <label>Scale Y</label>
+          <input type="range" min="50" max="150" value="100" class="hat-slider" id="hatScaleY">
+        </div>
+      </div>
+    </section>
+
+    <aside class="control-stack">
+      <div class="ctrl-block">
+        <label for="role1Select">Role 1:</label>
+        <select id="role1Select">
+          <option value="Deshi">Deshi</option>
+          <option value="Shugo">Shugo</option>
+          <option value="Senshi">Senshi</option>
+          <option value="Shihan">Shihan</option>
+        </select>
+      </div>
+      <div class="ctrl-block">
+        <label for="role2Select">Role 2:</label>
+        <select id="role2Select">
+          <option value="Irysmind">Irysmind</option>
+          <option value="Megairys">Megairys</option>
+          <option value="Irysfan">Irysfan</option>
+          <option value="Datahunter">Datahunter</option>
+        </select>
+      </div>
+      <div class="ctrl-block">
+        <label for="bgSelect">Text:</label>
+        <select id="bgSelect">
+          <option value="bg1.jpg">Text 1</option>
+          <option value="bg2.jpg">Text 2</option>
+          <option value="bg3.jpg">Text 3</option>
+          <option value="bg4.jpg" selected>Text 4</option>
+          <option value="bg5.jpg">Text 5</option>
+        </select>
+      </div>
+      <div class="ctrl-block">
+        <label>Sprites:</label>
+        <div>
+          <button id="addSpriteBtn">Add</button>
+          <button id="removeSpriteBtn">Remove</button>
+        </div>
+      </div>
+      <div class="ctrl-block">
+        <label>Hat:</label>
+        <div>
+          <button id="addHatBtn">Add Hat</button>
+          <button id="removeHatBtn">Remove</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <button id="downloadBtn" class="download-btn">Download PNG</button>
+
+  <!-- Загрузка html2canvas для скачивания -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <script>
+    // Состояние приложения
+    const state = {
+      nickname: 'Josh Benaron',
+      role1: 'Deshi',
+      role2: 'Irysmind',
+      sprites: [],
+      hat: {
+        added: false,
+        posX: 0,
+        posY: 0,
+        rotate: 0,
+        scaleX: 1,
+        scaleY: 1
+      },
+      background: 'bg4.jpg',
+      avatarUrl: 'avatar.png' // Начальный аватар
+    };
+
+    // DOM элементы
+    const elements = {
+      nickname: document.getElementById('nickname'),
+      role1: document.getElementById('role1'),
+      role2: document.getElementById('role2'),
+      role1Select: document.getElementById('role1Select'),
+      role2Select: document.getElementById('role2Select'),
+      bgSelect: document.getElementById('bgSelect'),
+      profileFrame: document.getElementById('profileFrame'),
+      avatar: document.getElementById('avatar'),
+      hatImage: document.getElementById('hatImage'),
+      hatControls: document.getElementById('hatControls'),
+      hatPosX: document.getElementById('hatPosX'),
+      hatPosY: document.getElementById('hatPosY'),
+      hatRotate: document.getElementById('hatRotate'),
+      hatScaleX: document.getElementById('hatScaleX'),
+      hatScaleY: document.getElementById('hatScaleY'),
+      spriteContainer: document.getElementById('spriteContainer'),
+      connectBtn: document.getElementById('connectBtn'),
+      addSpriteBtn: document.getElementById('addSpriteBtn'),
+      removeSpriteBtn: document.getElementById('removeSpriteBtn'),
+      addHatBtn: document.getElementById('addHatBtn'),
+      removeHatBtn: document.getElementById('removeHatBtn'),
+      downloadBtn: document.getElementById('downloadBtn'),
+    };
+
+    const sprites = ['sprite1.png', 'sprite2.png', 'sprite3.png', 'sprite4.png', 'sprite5.png'];
+    let isDraggingHat = false, dragStartX, dragStartY, originalHatPosX, originalHatPosY;
+
+    function init() {
+      setupEventListeners();
+      updateRoleDisplays();
+      updateBackground();
+      elements.avatar.style.backgroundImage = `url('${state.avatarUrl}')`;
+    }
+
+    function setupEventListeners() {
+      elements.role1Select.addEventListener('change', updateRoleDisplays);
+      elements.role2Select.addEventListener('change', updateRoleDisplays);
+      elements.bgSelect.addEventListener('change', updateBackground);
+      elements.addSpriteBtn.addEventListener('click', addSprite);
+      elements.removeSpriteBtn.addEventListener('click', removeSprite);
+      elements.addHatBtn.addEventListener('click', addHat);
+      elements.removeHatBtn.addEventListener('click', removeHat);
+      elements.hatPosX.addEventListener('input', updateHat);
+      elements.hatPosY.addEventListener('input', updateHat);
+      elements.hatRotate.addEventListener('input', updateHat);
+      elements.hatScaleX.addEventListener('input', updateHat);
+      elements.hatScaleY.addEventListener('input', updateHat);
+      // Заменяем обработчик на Discord
+      elements.connectBtn.addEventListener('click', connectDiscord);
+      elements.downloadBtn.addEventListener('click', downloadProfile);
+    }
+
+    function updateRoleDisplays() {
+      state.role1 = elements.role1Select.value;
+      state.role2 = elements.role2Select.value;
+      elements.role1.textContent = `${state.role1} (✧ᴗ✧)`;
+      elements.role1.style.color = getRole1Color(state.role1);
+      elements.role2.textContent = state.role2;
+    }
+
+    function getRole1Color(role) {
+      const colors = { Deshi: '#918bda', Shugo: '#e74c3c', Senshi: '#f1c40f', Shihan: '#3498db' };
+      return colors[role] || '#ffffff';
+    }
+
+    function updateBackground() {
+      state.background = elements.bgSelect.value;
+      elements.profileFrame.style.backgroundImage = `url(${state.background})`;
+    }
+
+    function addSprite() {
+      if (state.sprites.length >= 5) return;
+      const availableSprites = sprites.filter(s => !state.sprites.includes(s));
+      if (availableSprites.length === 0) return;
+      const randomSprite = availableSprites[Math.floor(Math.random() * availableSprites.length)];
+      state.sprites.push(randomSprite);
+      renderSprites();
+    }
+
+    function renderSprites() {
+      elements.spriteContainer.innerHTML = '';
+      const radius = 100;
+      const centerX = 110;
+      const centerY = 110;
+      const startDeg = -90;
+      state.sprites.forEach((sprite, i) => {
+        const angle = (startDeg + i * 360 / state.sprites.length) * Math.PI / 180;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        const img = document.createElement('img');
+        img.src = sprite;
+        img.className = 'sprite';
+        img.style.left = `${x}px`;
+        img.style.top = `${y}px`;
+        elements.spriteContainer.appendChild(img);
+      });
+    }
+
+    function removeSprite() {
+      if (state.sprites.length === 0) return;
+      state.sprites.pop();
+      renderSprites();
+    }
+
+    function addHat() {
+      if (state.hat.added) return;
+      state.hat.added = true;
+      elements.hatImage.src = 'hat.png';
+      elements.hatImage.style.display = 'block';
+      elements.hatControls.style.display = 'flex';
+      updateHat();
+      elements.hatImage.addEventListener('mousedown', startHatDrag);
+      document.addEventListener('mousemove', dragHat);
+      document.addEventListener('mouseup', endHatDrag);
+    }
+
+    function startHatDrag(e) {
+      isDraggingHat = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      originalHatPosX = state.hat.posX;
+      originalHatPosY = state.hat.posY;
+      elements.hatImage.style.cursor = 'grabbing';
+      e.preventDefault();
+    }
+
+    function dragHat(e) {
+      if (!isDraggingHat) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      state.hat.posX = originalHatPosX + dx;
+      state.hat.posY = originalHatPosY + dy;
+      elements.hatPosX.value = state.hat.posX;
+      elements.hatPosY.value = state.hat.posY;
+      updateHat();
+    }
+
+    function endHatDrag() {
+      isDraggingHat = false;
+      elements.hatImage.style.cursor = 'move';
+    }
+
+    function removeHat() {
+      if (!state.hat.added) return;
+      state.hat.added = false;
+      elements.hatImage.style.display = 'none';
+      elements.hatControls.style.display = 'none';
+      elements.hatImage.removeEventListener('mousedown', startHatDrag);
+      document.removeEventListener('mousemove', dragHat);
+      document.removeEventListener('mouseup', endHatDrag);
+    }
+
+    function updateHat() {
+      state.hat.posX = parseInt(elements.hatPosX.value);
+      state.hat.posY = parseInt(elements.hatPosY.value);
+      state.hat.rotate = parseInt(elements.hatRotate.value);
+      state.hat.scaleX = parseInt(elements.hatScaleX.value) / 100;
+      state.hat.scaleY = parseInt(elements.hatScaleY.value) / 100;
+
+      elements.hatImage.style.transform = `
+       translate(${state.hat.posX}px, ${state.hat.posY}px)
+       rotate(${state.hat.rotate}deg)
+       scale(${state.hat.scaleX}, ${state.hat.scaleY})
+      `;
+    }
+
+    // Функция для подключения Discord (перенаправляет на бэкенд)
+    function connectDiscord() {
+      try {
+        elements.connectBtn.textContent = 'Connecting...';
+        // Перенаправляем на бэкенд для аутентификации
+        window.location.href = 'http://localhost:3000/auth/discord';
+      } catch (error) {
+        console.error('Ошибка при старте аутентификации:', error);
+        alert('Ошибка подключения к Discord. Проверьте консоль (F12).');
+        elements.connectBtn.textContent = 'Connect Discord';
+      }
+    }
+
+    // Функция для скачивания карточки
+    function downloadProfile() {
+      if (typeof html2canvas !== 'undefined') {
+        html2canvas(elements.profileFrame, {
+          useCORS: true, // Разрешает загрузку изображений с других доменов
+          allowTaint: false, // Блокирует "загрязненные" холсты
+          scale: 2 // Увеличивает качество
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'jirys-card.png';
+          link.href = canvas.toDataURL('image/png'); // Преобразует холст в ссылку
+          link.click(); // Инициирует скачивание
+        }).catch(error => {
+          console.error('Ошибка при генерации изображения:', error);
+          alert('Не удалось скачать карточку. Проверьте консоль (F12).');
+        });
+      } else {
+        alert('Библиотека html2canvas не загрузилась. Подождите или проверьте интернет.');
+      }
+    }
+
+    // Обработка редиректа с бэкенда (получение ник/аватарки из Discord)
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+
+      // Проверяем URL на наличие данных профиля
+      const urlParams = new URLSearchParams(window.location.search);
+      const username = urlParams.get('username');
+      const avatarUrlFromDiscord = urlParams.get('avatar');
+
+      if (username && avatarUrlFromDiscord) {
+        // Загружаем аватарку из Discord как blob, чтобы избежать CORS
+        fetch(avatarUrlFromDiscord, {
+          mode: 'cors', // Включаем CORS
+          credentials: 'omit'
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Не удалось загрузить аватарку: ' + response.status);
+          }
+          return response.blob(); // Преобразуем ответ в blob
+        })
+        .then(blob => {
+          // Преобразуем blob в data URL
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const dataUrl = event.target.result; // Это data URL аватарки
+            // Обновляем состояние и интерфейс
+            state.nickname = username;
+            state.avatarUrl = dataUrl;
+            elements.nickname.textContent = state.nickname;
+            elements.avatar.style.backgroundImage = `url('${dataUrl}')`;
+            elements.connectBtn.textContent = 'Connected ✓';
+            elements.connectBtn.disabled = true;
+          };
+          reader.readAsDataURL(blob); // Читаем blob как data URL
+        })
+        .catch(error => {
+          console.error('Ошибка при загрузке аватарки:', error);
+          alert('Не удалось загрузить аватарку Discord. Используется стандартная.');
+          // Если не получилось — используем стандартную аватарку
+          state.nickname = username;
+          elements.nickname.textContent = state.nickname;
+          elements.connectBtn.textContent = 'Connected ✓';
+          elements.connectBtn.disabled = true;
+        });
+      }
+    });
+  </script>
+</body>
+</html>
