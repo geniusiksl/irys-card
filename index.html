@@ -207,7 +207,7 @@
 <body>
 
   <header class="main-header">
-    <img src="logo.png" class="logo" alt="JIRYS CARD">
+    <img src="logo.png" class="logo" alt="IRYS CARD">
     <!-- Кнопка теперь для Discord -->
     <button id="connectBtn" class="connect-btn">Connect Discord</button>
   </header>
@@ -512,7 +512,7 @@
           scale: 2 // Увеличивает качество
         }).then(canvas => {
           const link = document.createElement('a');
-          link.download = 'jirys-card.png';
+          link.download = 'irys-card.png';
           link.href = canvas.toDataURL('image/png'); // Преобразует холст в ссылку
           link.click(); // Инициирует скачивание
         }).catch(error => {
