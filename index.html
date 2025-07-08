@@ -495,7 +495,7 @@
       try {
         elements.connectBtn.textContent = 'Connecting...';
         // Перенаправляем на бэкенд для аутентификации
-        window.location.href = 'https://irys-card-backend.onrender.com/discord';
+        window.location.href = 'https://irys-card-backend.onrender.com/auth/discord';
       } catch (error) {
         console.error('Ошибка при старте аутентификации:', error);
         alert('Ошибка подключения к Discord. Проверьте консоль (F12).');
